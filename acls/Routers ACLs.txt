@@ -1,0 +1,73 @@
+Extended IP access list IT-ACL-IN
+    10 permit udp any eq bootpc any eq bootps
+    20 permit udp any eq bootps any eq bootpc
+    30 permit udp any host 192.168.99.10 eq domain
+    40 permit tcp any host 192.168.99.12 eq www
+    50 permit tcp any host 192.168.99.12 eq 443
+    60 permit tcp any host 192.168.99.11 eq ftp
+    70 permit udp any host 192.168.200.10 eq 1812
+    80 permit udp any host 192.168.200.10 eq 1813
+    90 permit tcp any 192.168.100.0 0.0.0.255 eq 22
+    100 permit udp any host 192.168.99.13 eq 514
+    110 permit udp any any eq 1985
+    120 permit ip 192.168.99.0 0.0.0.255 any
+    130 permit ip 192.168.100.0 0.0.0.255 any
+    140 permit ip 192.168.200.0 0.0.0.255 any
+    150 deny ip any any
+Extended IP access list HR-ACL-IN
+    10 permit udp any eq bootpc any eq bootps
+    20 permit udp any eq bootps any eq bootpc
+    30 permit udp any host 192.168.99.10 eq domain
+    40 permit tcp any host 192.168.99.12 eq www
+    50 permit tcp any host 192.168.99.12 eq 443
+    60 permit udp any host 192.168.99.13 eq 514
+    70 permit udp any any eq 1985
+    80 permit ip 192.168.99.0 0.0.0.255 any
+    90 deny ip any any
+Extended IP access list SALES-ACL-IN
+    10 permit udp any eq bootpc any eq bootps
+    20 permit udp any eq bootps any eq bootpc
+    30 permit udp any host 192.168.99.10 eq domain
+    40 permit tcp any host 192.168.99.12 eq www
+    50 permit tcp any host 192.168.99.12 eq 443
+    60 permit udp any host 192.168.99.13 eq 514
+    70 permit udp any any eq 1985
+    80 permit ip 192.168.99.0 0.0.0.255 any
+    90 permit udp any host 192.168.200.10 eq 1812
+    100 permit udp any host 192.168.200.10 eq 1813
+    110 deny ip any 192.168.10.0 0.0.0.255
+    120 deny ip any 192.168.20.0 0.0.0.255
+    130 deny ip any any
+Extended IP access list SERVER-ACL-IN
+    10 permit udp any any eq bootps
+    20 permit udp any any eq bootpc
+    30 permit udp any any eq domain
+    40 permit tcp any any eq www
+    50 permit tcp any any eq 443
+    60 permit tcp any any eq ftp
+    70 permit udp any host 192.168.200.10 eq 1812
+    80 permit udp any host 192.168.200.10 eq 1813
+    90 permit udp any host 192.168.99.13 eq 514
+    100 permit udp any any eq 1985
+    110 permit icmp any any
+    120 deny ip any host 192.168.99.16
+    130 deny ip any any
+Extended IP access list MGMT-ACL-IN
+    20 permit tcp 192.168.100.0 0.0.0.255 192.168.10.0 0.0.0.255 established
+    30 permit udp any eq bootpc any eq bootps
+    40 permit udp any host 192.168.99.13 eq 514
+    50 permit udp any any eq 1985
+    60 permit ip 192.168.99.0 0.0.0.255 any
+    70 deny ip any any 
+Extended IP access list RADIUS-ACL-IN
+    10 permit udp 192.168.10.0 0.0.0.255 host 192.168.200.10 eq 1812
+    20 permit udp 192.168.20.0 0.0.0.255 host 192.168.200.10 eq 1812
+    30 permit udp 192.168.30.0 0.0.0.255 host 192.168.200.10 eq 1812
+    40 permit udp 192.168.10.0 0.0.0.255 host 192.168.200.10 eq 1813
+    50 permit udp 192.168.20.0 0.0.0.255 host 192.168.200.10 eq 1813
+    60 permit udp 192.168.30.0 0.0.0.255 host 192.168.200.10 eq 1813
+    70 permit udp host 192.168.200.10 any range 1024 65535
+    80 permit udp any host 192.168.99.13 eq 514
+    90 permit udp any any eq 1985
+    100 permit ip 192.168.200.0 0.0.0.255 any
+    110 deny ip any any

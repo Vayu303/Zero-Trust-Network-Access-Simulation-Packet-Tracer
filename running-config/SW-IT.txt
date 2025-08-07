@@ -1,0 +1,359 @@
+SW-IT#sh runn
+Building configuration...
+
+Current configuration : 8531 bytes
+!
+version 15.0
+no service timestamps log datetime msec
+no service timestamps debug datetime msec
+no service password-encryption
+!
+hostname SW-IT
+!
+enable secret 5 $1$mERr$4dpRATIgxQacPVK0CfNV4/
+!
+!
+!
+!
+!
+aaa new-model
+!
+aaa authentication login default group radius local 
+!
+!
+aaa authorization exec default group radius local
+!
+!
+ip ssh version 2
+ip domain-name hq.local
+!
+username admin secret 5 $1$mERr$4dpRATIgxQacPVK0CfNV4/
+!
+vtp mode transparent
+!
+!
+ip dhcp snooping vlan 10
+ip dhcp snooping
+!
+spanning-tree mode pvst
+spanning-tree extend system-id
+!
+vlan 10
+ name IT
+!
+vlan 98
+ name NativeVlan98
+!
+vlan 100
+ name MGMT
+!
+vlan 999
+ name Blackhole
+!
+interface Port-channel1
+ switchport trunk native vlan 98
+ switchport mode trunk
+ switchport nonegotiate
+!
+interface FastEthernet0/1
+ switchport trunk native vlan 98
+ switchport trunk allowed vlan 10,98-100,200
+ ip dhcp snooping trust
+ switchport mode trunk
+ switchport nonegotiate
+ channel-group 1 mode active
+!
+interface FastEthernet0/2
+ switchport access vlan 10
+ ip dhcp snooping limit rate 10
+ switchport mode access
+ switchport nonegotiate
+ switchport port-security
+ switchport port-security mac-address sticky 
+ switchport port-security violation restrict 
+ switchport port-security mac-address sticky 00D0.97B2.6692
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+!
+interface FastEthernet0/3
+ switchport access vlan 10
+ ip dhcp snooping limit rate 10
+ switchport mode access
+ switchport nonegotiate
+ switchport port-security
+ switchport port-security mac-address sticky 
+ switchport port-security violation restrict 
+ switchport port-security mac-address sticky 0009.7CC1.81E3
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+!
+interface FastEthernet0/4
+ switchport access vlan 10
+ ip dhcp snooping limit rate 10
+ switchport mode access
+ switchport nonegotiate
+ switchport port-security
+ switchport port-security mac-address sticky 
+ switchport port-security violation restrict 
+ switchport port-security mac-address sticky 0005.5E27.A153
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+!
+interface FastEthernet0/5
+ switchport access vlan 999
+ ip dhcp snooping limit rate 10
+ switchport mode access
+ switchport nonegotiate
+ switchport port-security
+ switchport port-security mac-address sticky 
+ switchport port-security violation restrict 
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ shutdown
+!
+interface FastEthernet0/6
+ switchport access vlan 999
+ ip dhcp snooping limit rate 10
+ switchport mode access
+ switchport nonegotiate
+ switchport port-security
+ switchport port-security mac-address sticky 
+ switchport port-security violation restrict 
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ shutdown
+!
+interface FastEthernet0/7
+ switchport access vlan 999
+ ip dhcp snooping limit rate 10
+ switchport mode access
+ switchport nonegotiate
+ switchport port-security
+ switchport port-security mac-address sticky 
+ switchport port-security violation restrict 
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ shutdown
+!
+interface FastEthernet0/8
+ switchport access vlan 999
+ ip dhcp snooping limit rate 10
+ switchport mode access
+ switchport nonegotiate
+ switchport port-security
+ switchport port-security mac-address sticky 
+ switchport port-security violation restrict 
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ shutdown
+!
+interface FastEthernet0/9
+ switchport access vlan 999
+ ip dhcp snooping limit rate 10
+ switchport mode access
+ switchport nonegotiate
+ switchport port-security
+ switchport port-security mac-address sticky 
+ switchport port-security violation restrict 
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ shutdown
+!
+interface FastEthernet0/10
+ switchport access vlan 999
+ ip dhcp snooping limit rate 10
+ switchport mode access
+ switchport nonegotiate
+ switchport port-security
+ switchport port-security mac-address sticky 
+ switchport port-security violation restrict 
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ shutdown
+!
+interface FastEthernet0/11
+ switchport trunk native vlan 98
+ switchport trunk allowed vlan 10,98-100,200
+ ip arp inspection trust
+ ip dhcp snooping trust
+ switchport mode trunk
+ switchport nonegotiate
+ channel-group 1 mode active
+!
+interface FastEthernet0/12
+ switchport access vlan 999
+ ip dhcp snooping limit rate 10
+ switchport mode access
+ switchport port-security
+ switchport port-security mac-address sticky 
+ switchport port-security violation restrict 
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ shutdown
+!
+interface FastEthernet0/13
+ switchport access vlan 999
+ ip dhcp snooping limit rate 10
+ switchport mode access
+ switchport port-security
+ switchport port-security mac-address sticky 
+ switchport port-security violation restrict 
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ shutdown
+!
+interface FastEthernet0/14
+ switchport access vlan 999
+ ip dhcp snooping limit rate 10
+ switchport mode access
+ switchport port-security
+ switchport port-security mac-address sticky 
+ switchport port-security violation restrict 
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ shutdown
+!
+interface FastEthernet0/15
+ switchport access vlan 999
+ ip dhcp snooping limit rate 10
+ switchport mode access
+ switchport port-security
+ switchport port-security mac-address sticky 
+ switchport port-security violation restrict 
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ shutdown
+!
+interface FastEthernet0/16
+ switchport access vlan 999
+ ip dhcp snooping limit rate 10
+ switchport mode access
+ switchport port-security
+ switchport port-security mac-address sticky 
+ switchport port-security violation restrict 
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ shutdown
+!
+interface FastEthernet0/17
+ switchport access vlan 999
+ ip dhcp snooping limit rate 10
+ switchport mode access
+ switchport port-security
+ switchport port-security mac-address sticky 
+ switchport port-security violation restrict 
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ shutdown
+!
+interface FastEthernet0/18
+ switchport access vlan 999
+ ip dhcp snooping limit rate 10
+ switchport mode access
+ switchport port-security
+ switchport port-security mac-address sticky 
+ switchport port-security violation restrict 
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ shutdown
+!
+interface FastEthernet0/19
+ switchport access vlan 999
+ ip dhcp snooping limit rate 10
+ switchport mode access
+ switchport port-security
+ switchport port-security mac-address sticky 
+ switchport port-security violation restrict 
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ shutdown
+!
+interface FastEthernet0/20
+ switchport access vlan 999
+ ip dhcp snooping limit rate 10
+ switchport mode access
+ switchport port-security
+ switchport port-security mac-address sticky 
+ switchport port-security violation restrict 
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ shutdown
+!
+interface FastEthernet0/21
+ switchport access vlan 999
+ ip dhcp snooping limit rate 10
+ switchport mode access
+ switchport port-security
+ switchport port-security mac-address sticky 
+ switchport port-security violation restrict 
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ shutdown
+!
+interface FastEthernet0/22
+ switchport access vlan 999
+ ip dhcp snooping limit rate 10
+ switchport mode access
+ switchport port-security
+ switchport port-security mac-address sticky 
+ switchport port-security violation restrict 
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ shutdown
+!
+interface FastEthernet0/23
+ switchport access vlan 999
+ ip dhcp snooping limit rate 10
+ switchport mode access
+ switchport port-security
+ switchport port-security mac-address sticky 
+ switchport port-security violation restrict 
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ shutdown
+!
+interface FastEthernet0/24
+ switchport access vlan 100
+ ip dhcp snooping limit rate 10
+ switchport mode access
+ switchport port-security
+ switchport port-security mac-address sticky 
+ switchport port-security violation restrict 
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+!
+interface GigabitEthernet0/1
+ switchport access vlan 999
+ shutdown
+!
+interface GigabitEthernet0/2
+ switchport access vlan 999
+ shutdown
+!
+interface Vlan1
+ no ip address
+ shutdown
+!
+interface Vlan100
+ ip address 192.168.100.10 255.255.255.0
+!
+ip default-gateway 192.168.100.252
+!
+!
+!
+!
+line con 0
+ login
+!
+line vty 0 4
+ exec-timeout 5 0
+ transport input ssh
+line vty 5 15
+ exec-timeout 5 0
+ login authentication SSH-AUTH
+ transport input ssh
+!
+!
+!
+!
+end

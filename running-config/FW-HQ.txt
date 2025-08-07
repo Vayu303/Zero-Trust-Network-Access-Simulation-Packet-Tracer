@@ -1,0 +1,125 @@
+FW-HQ(config)#sh runn
+: Saved
+:
+ASA Version 9.6(1)
+!
+hostname FW-HQ
+domain-name wr
+names
+!
+interface GigabitEthernet1/1
+ nameif outside
+ security-level 0
+ ip address 203.0.113.2 255.255.255.0
+!
+interface GigabitEthernet1/2
+ nameif dmz
+ security-level 50
+ ip address 192.168.50.1 255.255.255.0
+!
+interface GigabitEthernet1/3
+ nameif inside
+ security-level 100
+ ip address 192.168.254.1 255.255.255.0
+!
+interface GigabitEthernet1/4
+ no nameif
+ no security-level
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/5
+ no nameif
+ no security-level
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/6
+ no nameif
+ no security-level
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/7
+ no nameif
+ no security-level
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/8
+ no nameif
+ no security-level
+ no ip address
+ shutdown
+!
+interface Management1/1
+ management-only
+ no nameif
+ no security-level
+ no ip address
+ shutdown
+!
+object network HR-NET
+ subnet 192.168.20.0 255.255.255.0
+object network IT-NET
+ subnet 192.168.10.0 255.255.255.0
+object network OBJ_DMZ
+ subnet 192.168.50.0 255.255.255.0
+ nat (dmz,outside) static 203.0.113.3
+object network OBJ_INSIDE
+ subnet 192.168.0.0 255.255.0.0
+ nat (inside,outside) dynamic interface
+object network WEB-SERVER
+ host 192.168.50.10
+ nat (dmz,outside) static 203.0.113.3
+!
+route outside 0.0.0.0 0.0.0.0 203.0.113.1 1
+route inside 192.168.10.0 255.255.255.0 192.168.254.3 1
+route inside 192.168.20.0 255.255.255.0 192.168.254.3 1
+route inside 192.168.30.0 255.255.255.0 192.168.254.3 1
+route inside 192.168.99.0 255.255.255.0 192.168.254.3 1
+route inside 192.168.100.0 255.255.255.0 192.168.254.3 1
+route inside 192.168.200.0 255.255.255.0 192.168.254.3 1
+!
+access-list OUTSIDE_IN extended permit icmp any any
+access-list OUTSIDE_IN extended permit tcp any host 203.0.113.2 eq www
+access-list OUTSIDE_IN extended permit tcp any host 203.0.113.2 eq 443
+access-list OUTSIDE_IN extended permit tcp any host 203.0.113.3 eq www
+access-list DMZ_IN extended permit tcp any host 192.168.50.10 eq www
+access-list DMZ_IN extended permit tcp any host 192.168.50.10 eq 443
+access-list INSIDE_DMZ extended permit tcp 192.168.10.0 255.255.255.0 host 192.168.50.10 eq 3389
+access-list INSIDE_DMZ extended deny ip any 192.168.50.0 255.255.255.0
+access-list INTERVLAN extended deny ip 192.168.10.0 255.255.255.0 192.168.20.0 255.255.255.0
+access-list INTERVLAN extended deny ip 192.168.20.0 255.255.255.0 192.168.30.0 255.255.255.0
+access-list GLOBAL_DENY extended deny ip any any
+access-list INSIDE_POLICY extended permit tcp object IT-NET object HR-NET eq 445
+access-list INSIDE_POLICY extended deny ip any any
+!
+!
+access-group OUTSIDE_IN in interface outside
+access-group DMZ_IN in interface dmz
+access-group INSIDE_POLICY in interface inside
+!
+!
+class-map inspection_default
+ match default-inspection-traffic
+!
+policy-map type inspect dns preset_dns_map
+ parameters
+  message-length maximum 512
+policy-map global_policy
+ class inspection_default
+  inspect dns preset_dns_map
+  inspect ftp 
+  inspect h323 
+  inspect http 
+  inspect tftp 
+!
+service-policy global_policy global
+!
+telnet timeout 5
+ssh timeout 5
+!
+!
+!
+!

@@ -1,0 +1,278 @@
+R-HQ-1#sh runn
+Building configuration...
+
+Current configuration : 6612 bytes
+!
+version 15.1
+service timestamps log datetime msec
+no service timestamps debug datetime msec
+no service password-encryption
+!
+hostname R-HQ-1
+!
+!
+!
+!
+!
+!
+!
+!
+ip cef
+no ipv6 cef
+!
+!
+!
+!
+license udi pid CISCO2911/K9 sn FTX1524LB6B-
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+spanning-tree mode pvst
+!
+!
+!
+!
+!
+!
+interface GigabitEthernet0/0
+ no ip address
+ duplex auto
+ speed auto
+!
+interface GigabitEthernet0/0.10
+ encapsulation dot1Q 10
+ ip address 192.168.10.254 255.255.255.0
+ ip helper-address 192.168.99.10
+ ip access-group IT-ACL-IN in
+ standby 10 ip 192.168.10.252
+ standby 10 priority 110
+ standby 10 preempt
+!
+interface GigabitEthernet0/0.20
+ encapsulation dot1Q 20
+ ip address 192.168.20.254 255.255.255.0
+ ip helper-address 192.168.99.10
+ ip access-group HR-ACL-IN in
+ standby 20 ip 192.168.20.252
+ standby 20 priority 110
+ standby 20 preempt
+!
+interface GigabitEthernet0/0.30
+ encapsulation dot1Q 30
+ ip address 192.168.30.254 255.255.255.0
+ ip helper-address 192.168.99.10
+ ip access-group SALES-ACL-IN in
+ standby 30 ip 192.168.30.252
+ standby 30 priority 110
+ standby 30 preempt
+!
+interface GigabitEthernet0/0.99
+ encapsulation dot1Q 99
+ ip address 192.168.99.254 255.255.255.0
+ ip access-group SERVER-ACL-IN in
+ standby 99 ip 192.168.99.252
+ standby 99 priority 110
+ standby 99 preempt
+!
+interface GigabitEthernet0/0.100
+ encapsulation dot1Q 100
+ ip address 192.168.100.254 255.255.255.0
+ ip access-group MGMT-ACL-IN in
+ standby 100 ip 192.168.100.252
+ standby 100 priority 110
+ standby 100 preempt
+!
+interface GigabitEthernet0/0.200
+ encapsulation dot1Q 200
+ ip address 192.168.200.254 255.255.255.0
+ ip access-group RADIUS-ACL-IN in
+ standby 200 ip 192.168.200.252
+ standby 200 priority 110
+ standby 200 preempt
+!
+interface GigabitEthernet0/0.254
+ encapsulation dot1Q 254
+ ip address 192.168.254.3 255.255.255.0
+ standby 254 ip 192.168.254.252
+ standby 254 priority 110
+ standby 254 preempt
+!
+interface GigabitEthernet0/1
+ no ip address
+ duplex auto
+ speed auto
+!
+interface GigabitEthernet0/2
+ no ip address
+ duplex auto
+ speed auto
+!
+interface Vlan1
+ no ip address
+!
+interface Vlan100
+ mac-address 000b.bec8.b001
+ no ip address
+!
+ip classless
+ip route 0.0.0.0 0.0.0.0 192.168.254.1 
+!
+ip flow-export version 9
+!
+!
+ip access-list extended IT-ACL-IN
+ remark VLAN IT
+ remark DHCP client  server
+ permit udp any eq bootpc any eq bootps
+ remark DHCP server  client
+ permit udp any eq bootps any eq bootpc
+ remark DNS
+ permit udp any host 192.168.99.10 eq domain
+ remark HTTP / HTTPS
+ permit tcp any host 192.168.99.12 eq www
+ permit tcp any host 192.168.99.12 eq 443
+ remark FTP
+ permit tcp any host 192.168.99.11 eq ftp
+ remark RADIUS auth + acct
+ permit udp any host 192.168.200.10 eq 1812
+ permit udp any host 192.168.200.10 eq 1813
+ remark SSH verso MGMT
+ permit tcp any 192.168.100.0 0.0.0.255 eq 22
+ remark Syslog
+ permit udp any host 192.168.99.13 eq 514
+ remark HSRP (UDP 1985)
+ permit udp any any eq 1985
+ remark Return traffic from servers
+ permit ip 192.168.99.0 0.0.0.255 any
+ permit ip 192.168.100.0 0.0.0.255 any
+ permit ip 192.168.200.0 0.0.0.255 any
+ remark Deny all else
+ deny ip any any
+ip access-list extended HR-ACL-IN
+ remark VLAN HR
+ remark DHCP client  server
+ permit udp any eq bootpc any eq bootps
+ remark DHCP server  client
+ permit udp any eq bootps any eq bootpc
+ remark DNS
+ permit udp any host 192.168.99.10 eq domain
+ remark HTTP / HTTPS
+ permit tcp any host 192.168.99.12 eq www
+ permit tcp any host 192.168.99.12 eq 443
+ remark Syslog
+ permit udp any host 192.168.99.13 eq 514
+ remark HSRP (UDP 1985)
+ permit udp any any eq 1985
+ remark Return traffic from servers
+ permit ip 192.168.99.0 0.0.0.255 any
+ remark Deny all else
+ deny ip any any
+ip access-list extended SALES-ACL-IN
+ remark VLAN SALES
+ remark DHCP client  server
+ permit udp any eq bootpc any eq bootps
+ remark DHCP server  client
+ permit udp any eq bootps any eq bootpc
+ remark DNS
+ permit udp any host 192.168.99.10 eq domain
+ remark HTTP / HTTPS
+ permit tcp any host 192.168.99.12 eq www
+ permit tcp any host 192.168.99.12 eq 443
+ remark Syslog
+ permit udp any host 192.168.99.13 eq 514
+ remark HSRP (UDP 1985)
+ permit udp any any eq 1985
+ remark Return traffic from servers
+ permit ip 192.168.99.0 0.0.0.255 any
+ remark RADIUS (se serve)
+ permit udp any host 192.168.200.10 eq 1812
+ permit udp any host 192.168.200.10 eq 1813
+ remark Deny lateral movement
+ deny ip any 192.168.10.0 0.0.0.255
+ deny ip any 192.168.20.0 0.0.0.255
+ deny ip any any
+ip access-list extended SERVER-ACL-IN
+ remark VLAN SERVER (192.168.99.0/24)
+ remark 1) DHCP - permetti tutto il traffico DHCP
+ permit udp any any eq bootps
+ permit udp any any eq bootpc
+ remark 2) DNS
+ permit udp any any eq domain
+ remark 3) HTTP / HTTPS
+ permit tcp any any eq www
+ permit tcp any any eq 443
+ remark 4) FTP
+ permit tcp any any eq ftp
+ remark 5) RADIUS
+ permit udp any host 192.168.200.10 eq 1812
+ permit udp any host 192.168.200.10 eq 1813
+ remark 6) Syslog
+ permit udp any host 192.168.99.13 eq 514
+ remark 7) HSRP
+ permit udp any any eq 1985
+ remark 8) Ping troubleshooting
+ permit icmp any any
+ remark Deny honeypot & residuo
+ deny ip any host 192.168.99.16
+ deny ip any any
+ip access-list extended MGMT-ACL-IN
+ remark VLAN MGMT
+ remark SSH amministrativo (IT  MGMT)
+ remark SSH connections
+ permit tcp 192.168.100.0 0.0.0.255 192.168.10.0 0.0.0.255 established
+ remark DHCP client  server (se serve)
+ permit udp any eq bootpc any eq bootps
+ remark Syslog
+ permit udp any host 192.168.99.13 eq 514
+ remark HSRP (UDP 1985)
+ permit udp any any eq 1985
+ remark Return traffic from other servers
+ permit ip 192.168.99.0 0.0.0.255 any
+ remark Deny all else
+ deny ip any any
+ip access-list extended RADIUS-ACL-IN
+ remark VLAN RADIUS
+ remark RADIUS Auth e Acct (client  server)
+ permit udp 192.168.10.0 0.0.0.255 host 192.168.200.10 eq 1812
+ permit udp 192.168.20.0 0.0.0.255 host 192.168.200.10 eq 1812
+ permit udp 192.168.30.0 0.0.0.255 host 192.168.200.10 eq 1812
+ permit udp 192.168.10.0 0.0.0.255 host 192.168.200.10 eq 1813
+ permit udp 192.168.20.0 0.0.0.255 host 192.168.200.10 eq 1813
+ permit udp 192.168.30.0 0.0.0.255 host 192.168.200.10 eq 1813
+ remark RADIUS server  client (response)
+ permit udp host 192.168.200.10 any range 1024 65535
+ remark Syslog (da RADIUS)
+ permit udp any host 192.168.99.13 eq 514
+ remark HSRP (UDP 1985)
+ permit udp any any eq 1985
+ remark Return traffic (IP generic)
+ permit ip 192.168.200.0 0.0.0.255 any
+ remark Deny all else
+ deny ip any any
+!
+!
+!
+!
+snmp-server community pubblic RO
+snmp-server community public RO
+!
+logging trap debugging
+logging 192.168.99.13
+line con 0
+!
+line aux 0
+!
+line vty 0 4
+ login
+!
+!
+!
+end

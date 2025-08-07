@@ -1,0 +1,236 @@
+SW-Core#sh runn
+Building configuration...
+
+Current configuration : 4264 bytes
+!
+version 15.0
+no service timestamps log datetime msec
+no service timestamps debug datetime msec
+no service password-encryption
+!
+hostname SW-Core
+!
+!
+!
+!
+vtp mode transparent
+!
+ip arp inspection vlan 10,20,30
+ip arp inspection validate src-mac dst-mac ip
+!
+ip dhcp snooping vlan 10,20,30,99
+ip dhcp snooping
+!
+spanning-tree mode pvst
+spanning-tree extend system-id
+spanning-tree vlan 10,20,30,98-100 priority 4096
+!
+vlan 10
+ name IT
+!
+vlan 20
+ name HR
+!
+vlan 30
+ name Sales
+!
+vlan 50
+ name DMZ
+!
+vlan 98
+ name NativeVlan98
+!
+vlan 99
+ name Servers
+!
+vlan 100
+ name MGMT
+!
+vlan 200
+ name RADIUS
+!
+vlan 254
+ name ASA-Inside
+!
+vlan 999
+ name Blackhole
+!
+interface Port-channel1
+ switchport trunk native vlan 98
+ switchport trunk allowed vlan 10,98-100,200
+ switchport mode trunk
+ switchport nonegotiate
+!
+interface FastEthernet0/1
+ description RADIUS access port
+ switchport access vlan 200
+ switchport mode access
+ spanning-tree portfast
+!
+interface FastEthernet0/2
+ switchport trunk native vlan 98
+ switchport trunk allowed vlan 10,98-100,200
+ ip arp inspection trust
+ ip dhcp snooping trust
+ switchport mode trunk
+ switchport nonegotiate
+ channel-group 1 mode active
+!
+interface FastEthernet0/3
+ switchport trunk native vlan 98
+ switchport trunk allowed vlan 10,20,98-100,200
+ ip arp inspection trust
+ ip dhcp snooping trust
+ switchport mode trunk
+ switchport nonegotiate
+ spanning-tree guard root
+!
+interface FastEthernet0/4
+ switchport trunk native vlan 98
+ switchport trunk allowed vlan 10,30,98-100,200
+ ip arp inspection trust
+ ip dhcp snooping trust
+ switchport mode trunk
+ switchport nonegotiate
+ spanning-tree guard root
+!
+interface FastEthernet0/5
+ switchport trunk native vlan 98
+ switchport trunk allowed vlan 10,20,30,98-100,200
+ ip arp inspection trust
+ ip dhcp snooping trust
+ switchport mode trunk
+ switchport nonegotiate
+ spanning-tree guard root
+!
+interface FastEthernet0/6
+ switchport access vlan 999
+ shutdown
+!
+interface FastEthernet0/7
+ switchport access vlan 999
+ shutdown
+!
+interface FastEthernet0/8
+ switchport access vlan 999
+ shutdown
+!
+interface FastEthernet0/9
+ switchport access vlan 999
+ shutdown
+!
+interface FastEthernet0/10
+ switchport access vlan 999
+ shutdown
+!
+interface FastEthernet0/11
+ switchport access vlan 999
+ shutdown
+!
+interface FastEthernet0/12
+ switchport trunk native vlan 98
+ switchport trunk allowed vlan 10,98-100,200
+ ip arp inspection trust
+ ip dhcp snooping trust
+ switchport mode trunk
+ switchport nonegotiate
+ channel-group 1 mode active
+!
+interface FastEthernet0/13
+ switchport access vlan 999
+ shutdown
+!
+interface FastEthernet0/14
+ switchport access vlan 999
+ shutdown
+!
+interface FastEthernet0/15
+ switchport access vlan 999
+ shutdown
+!
+interface FastEthernet0/16
+ switchport access vlan 999
+ shutdown
+!
+interface FastEthernet0/17
+ switchport access vlan 999
+ shutdown
+!
+interface FastEthernet0/18
+ switchport access vlan 999
+ shutdown
+!
+interface FastEthernet0/19
+ switchport access vlan 999
+ shutdown
+!
+interface FastEthernet0/20
+ switchport access vlan 999
+ shutdown
+!
+interface FastEthernet0/21
+ switchport access vlan 999
+ shutdown
+!
+interface FastEthernet0/22
+ switchport access vlan 999
+ shutdown
+!
+interface FastEthernet0/23
+ switchport access vlan 999
+ shutdown
+!
+interface FastEthernet0/24
+ description Link to ASA Firewall
+ switchport access vlan 254
+ switchport trunk native vlan 98
+ switchport trunk allowed vlan 30,50,98-100,200,254
+ ip arp inspection trust
+ ip dhcp snooping trust
+ switchport mode trunk
+ switchport nonegotiate
+ spanning-tree guard root
+!
+interface GigabitEthernet0/1
+ switchport trunk native vlan 98
+ switchport trunk allowed vlan 10,20,30,98-100,254
+ ip arp inspection trust
+ ip dhcp snooping trust
+ switchport mode trunk
+ switchport nonegotiate
+ spanning-tree guard root
+!
+interface GigabitEthernet0/2
+ switchport access vlan 999
+ switchport trunk native vlan 98
+ switchport trunk allowed vlan 10,20,30,98-100,254
+ switchport mode trunk
+ spanning-tree guard root
+!
+interface Vlan1
+ no ip address
+ shutdown
+!
+interface Vlan100
+ ip address 192.168.100.1 255.255.255.0
+!
+interface Vlan254
+ description Link to ASA-Inside
+ ip address 192.168.254.2 255.255.255.0
+!
+ip default-gateway 192.168.100.254
+!
+!
+!
+!
+line con 0
+!
+line vty 0 4
+ login
+line vty 5 15
+ login
+!
+!
+!
+!
+end

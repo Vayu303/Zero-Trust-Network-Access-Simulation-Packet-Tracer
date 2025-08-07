@@ -1,0 +1,20 @@
+access-list OUTSIDE_IN; 4 elements; name hash: 0x7d9c6822
+access-list OUTSIDE_IN line 1 extended permit icmp any any(hitcnt=0) 0x4d0b8875
+access-list OUTSIDE_IN line 2 extended permit tcp any host 203.0.113.2 eq www(hitcnt=0) 0x86a2a14e
+access-list OUTSIDE_IN line 3 extended permit tcp any host 203.0.113.2 eq 443(hitcnt=0) 0x3e695be7
+access-list OUTSIDE_IN line 4 extended permit tcp any host 203.0.113.3 eq www(hitcnt=0) 0x8c832775
+access-list DMZ_IN; 2 elements; name hash: 0xa22a3dc1
+access-list DMZ_IN line 1 extended permit tcp any host 192.168.50.10 eq www(hitcnt=0) 0x4a0e6a53
+access-list DMZ_IN line 2 extended permit tcp any host 192.168.50.10 eq 443(hitcnt=0) 0x73a2de70
+access-list INSIDE_DMZ; 2 elements; name hash: 0x98304a76
+access-list INSIDE_DMZ line 1 extended permit tcp 192.168.10.0 255.255.255.0 host 192.168.50.10 eq 3389(hitcnt=0) 0x7967e55b
+access-list INSIDE_DMZ line 2 extended deny ip any 192.168.50.0 255.255.255.0(hitcnt=0) 0xba49141e
+access-list INTERVLAN; 2 elements; name hash: 0xd4d0e3a9
+access-list INTERVLAN line 1 extended deny ip 192.168.10.0 255.255.255.0 192.168.20.0 255.255.255.0(hitcnt=0) 0x54c0818a
+access-list INTERVLAN line 2 extended deny ip 192.168.20.0 255.255.255.0 192.168.30.0 255.255.255.0(hitcnt=0) 0x1659bdbb
+access-list GLOBAL_DENY; 1 elements; name hash: 0xea469630
+access-list GLOBAL_DENY line 1 extended deny ip any any(hitcnt=0) 0xd7b3c10e
+access-list INSIDE_POLICY; 2 elements; name hash: 0xee4cca44
+access-list INSIDE_POLICY line 1 extended permit tcp object IT-NET object HR-NET eq 445(hitcnt=0) 0x07d1c312
+access-list INSIDE_POLICY line 1 extended permit tcp 192.168.10.0 255.255.255.0 192.168.20.0 255.255.255.0 eq 445(hitcnt=0) 0x9eda3458
+access-list INSIDE_POLICY line 2 extended deny ip any any(hitcnt=403) 0xaa25451c
