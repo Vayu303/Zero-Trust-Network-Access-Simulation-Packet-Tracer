@@ -33,6 +33,8 @@ Key Zero Trust features implemented:
 - DHCP Snooping & Dynamic ARP Inspection (DHCP Rougue, VLAN Hopping and ARP Spoofing prevention)
 - Honeypot (i will integrate a simulation for the project, in Packet Tracer there are many limitations)
 - Simulated SNMP integration
+- Port-security
+- STP Toolkit (root guard, loop guard, portfast)
 
 ## 🖥️ Network Topology
 
