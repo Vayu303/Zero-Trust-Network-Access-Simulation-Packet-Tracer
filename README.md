@@ -1,4 +1,4 @@
-# Zero-Trust-Network-Access-Simulation-Packet-Tracer# 🔐 Zero Trust Network Access Simulation – Cisco Packet Tracer
+# Zero Trust Network Access Simulation – Cisco Packet Tracer
 
 ## Overview
 
