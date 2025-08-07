@@ -1,0 +1,74 @@
+## Access Switches — Security & STP Hardening (Ports to End Hosts)
+
+All access ports (connected to PCs or printers) should be configured with the following:
+
+- Access mode
+- Assigned VLAN
+- PortFast
+- BPDU Guard
+- Port Security (Sticky MAC, 1 max)
+- Shutdown unused ports
+
+### General Guidelines per Access Port
+
+- Enable PortFast to avoid STP delays during host connection.
+- Enable BPDU Guard to shut down ports receiving BPDUs unexpectedly.
+- Enable Port Security to prevent unauthorized devices.
+
+---
+
+## STP Security and Optimization – Core Switch
+
+### Root Bridge Configuration
+
+Force the Core Switch (`SW-Core`) to be Root Bridge for all active VLANs:
+
+- Use low STP priority (`4096`) to ensure root bridge role.
+
+### STP Configuration per VLAN
+
+- VLAN 10, 20, 30, 99: Priority set to 4096.
+- VLAN 100 (Mgmt): Will be added later with same priority if needed.
+
+### Trunk Ports to Access Switches (Example)
+
+Each trunk to an access switch should include:
+
+- Trunking mode (dot1q)
+- Allowed VLANs explicitly listed
+- STP Root Guard enabled
+- Loop Guard enabled (optional but recommended)
+
+---
+
+## Recommended Trunk Port Configuration – Core Switch
+
+Interface toward router:
+
+- VLANs allowed: 10, 20, 30, 99
+- Root Guard enabled to prevent takeover
+- Dot1Q encapsulation required on some platforms
+
+Interface configuration toward router (`R-HQ`):
+
+```
+Interface GigabitEthernet0/1
+Description: Link to Router R-HQ
+Switchport trunk encapsulation dot1q
+Switchport mode trunk
+Switchport trunk allowed vlan 10,20,30,99
+Spanning-tree guard root
+No shutdown
+```
+
+---
+
+## Additional STP Protection Tools
+
+| Feature         | Apply To                          | Purpose                                           |
+| --------------- | --------------------------------- | ------------------------------------------------- |
+| **Root Guard**  | Core Switch → access trunks       | Prevent access switches from becoming root        |
+| **Loop Guard**  | Core Switch → access trunks       | Prevent loops due to unidirectional BPDU loss     |
+| **BPDU Filter** | Access Switch → access ports only | Prevent sending/receiving BPDU on host interfaces |
+
+Note: `BPDU Filter` should **only** be used on access ports with `PortFast`, and **not on trunk ports**.

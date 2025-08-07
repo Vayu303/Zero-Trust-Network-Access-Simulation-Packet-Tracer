@@ -1,0 +1,160 @@
+# RADIUS SERVER
+
+AAA Server implementation on a separate VLAN, 200.
+
+## Updated VLAN overview
+
+| VLAN | Name   | Use                        |
+| ---- | ------ | -------------------------- |
+| 10   | IT     | Host IT                    |
+| 20   | HR     | Host HR                    |
+| 30   | SALES  | Host Sales                 |
+| 98   | Native | Trunk native VLAN          |
+| 99   | SERVER | DHCP, DNS, File, Web, ecc. |
+| 100  | MGMT   | Switch/router access       |
+| 200  | RADIUS | Centralized AAA server     |
+
+## TOPOLOGY
+
+- **Core switch**: distribute all VLANs
+- **Router** (Router-on-a-Stick): manages inter-vlan routing
+- **Server RADIUS**: linked directly to core switch, VLAN 200
+- **other switches and hosts**: already there (IT, HR, SALES, MGMT, ecc.)
+
+---
+
+## 🛠️ STEP-BY-STEP
+
+---
+
+### **1. VLAN 200 on Core Switch**
+
+**On core-switch**:
+
+```bash
+vlan 200
+ name RADIUS
+```
+
+---
+
+### 🔹 **2. access port**
+
+```bash
+int f0/1
+ description RADIUS SERVER
+ switchport mode access
+ switchport access vlan 200
+ spanning-tree portfast
+```
+
+---
+
+### 🔹 **3. RADIUS server IPv4 address configuration**
+
+📍 On the server tab:
+
+- `Desktop > IP Configuration`
+  - IP: `192.168.200.10`
+  - Subnet mask: `255.255.255.0`
+  - Default gateway: `192.168.200.1`
+
+> Why the gateway? Because the server needs it to communicate to other VLANs.
+
+---
+
+### 🔹 **4. RADIUS Server (AAA service)**
+
+📍 **Services > AAA**:
+
+- AAA: **On**
+- Add user:
+  - Username: `admin`
+  - Password: `1234`
+- Shared Secret: `radiuskey`
+- Lascia le porte default: `1812` (auth), `1813` (accounting)
+
+---
+
+### 🔹 **5. Subinterface for VLAN 200 (Router-on-a-Stick)**
+
+📍 On routers:
+
+```bash
+interface GigabitEthernet0/0.200
+ encapsulation dot1Q 200
+ ip address 192.168.200.1 255.255.255.0
+```
+
+⚠️ If we were using L3 switches, instead:
+
+```bash
+interface Vlan200
+ ip address 192.168.200.1 255.255.255.0
+ no shutdown
+```
+
+---
+
+### 🔹 **6. Configura il dispositivo da autenticare via RADIUS (es. uno switch access)**
+
+📍 On access-switches (e.g. SW-IT):
+
+```bash
+! enable AAA
+aaa new-model
+
+! Define RADIUS server
+radius-server host 192.168.200.10 key radiuskey
+
+! set up an authentication method
+aaa authentication login SSH-AUTH group radius local
+! Se RADIUS è down, si può accedere con un utente locale come backup
+
+! Apply to VTY line (SSH)
+line vty 0 4
+ login authentication default
+ transport input ssh
+
+! set up domain name and rsa public key
+ip domain-name hq.local
+crypto key generate rsa
+```
+
+---
+
+### 🔹 **7. Test login**
+
+📍 From a PC in VLAN 10 (IT):
+
+```bash
+ssh -l admin <switch-IP>
+```
+
+- Username: `admin`
+- Password: `1234`
+  → RADIUS server authenticates!
+
+---
+
+### 🔹 **8. Optional ACL for security**
+
+To limit who can communicate with RADIUS:
+
+```bash
+ip access-list extended RADIUS_ACCESS
+ permit udp 192.168.100.0 0.0.0.255 host 192.168.200.10 eq 1812
+ permit udp 192.168.100.0 0.0.0.255 host 192.168.200.10 eq 1813
+ deny ip any any
+```
+
+## Apply on **inbound int g0/0.200** or on SVI 200.
+
+## Final Summary
+
+| Component             | IP                     | VLAN | Description                    |
+| --------------------- | ---------------------- | ---- | ------------------------------ |
+| RADIUS Server         | `192.168.200.10`       | 200  | centralized AAA                |
+| VLAN 200 Gateway      | `192.168.200.1`        | 200  | Router-on-a-Stick or L3 SVI    |
+| PC test (es. VLAN 10) | DHCP or `192.168.10.x` | 10   | SSH test                       |
+| Access switch         | IP managed in VLAN 100 | 100  | SSH centralized authentication |
