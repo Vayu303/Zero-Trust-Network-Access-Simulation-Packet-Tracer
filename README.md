@@ -59,8 +59,9 @@ Key Zero Trust features implemented:
 │   ├── ASA Firewall ACLs.txt
 │   └── Routers ACLs.txt
 ├── docs/
-│   ├── configurations.md         # In-depth documentation
-│   ├── implementation.md      # Notes on features and configs
+│   ├── configurations/        # In-depth documentation on configurations and feature implementation
+│       ├── SSH.md
+│       ├── EtherChannel.md
 │   └── topology.png           # Network diagram
 ├── running-config/
 │   ├── R-HQ-1.txt
