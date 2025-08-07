@@ -2,8 +2,9 @@
 
 ## Overview
 
-This project simulates a **Zero Trust Network Access (ZTNA)** architecture using **Cisco Packet Tracer**. It focuses on **segmentation**, **access control**, and **visibility** using enterprise-grade practices. The implementation includes VLANs, ACLs, AAA with RADIUS, EtherChannel, HSRP, Syslog, and basic SNMP/Honeypot simulation.
-This is the first version of the project and it contains only one site (HQ), future updates will implement other branches, BGP and OSPF routing, VPNs, etc.
+This project simulates a **Zero Trust Network Access (ZTNA)** architecture using **Cisco Packet Tracer**. It focuses on **segmentation**, **access control**, and **visibility** using enterprise-grade practices. The implementation includes VLANs, ACLs, AAA with RADIUS, EtherChannel, HSRP, DHCP and DNS Server, etc.
+Syslog, SNMP and Honeypot are dummy due to PT limitations.
+This is the first version of the project and it contains only one site (HQ), future updates will implement other branches, BGP and OSPF routing, VPNs and more.
 This project is meant to improve with future commits in order to create a large corporate network.
 Zero Trust Architecture (ZTNA) – Simulation Scope
 This project implements Zero Trust Network Access (ZTNA) principles using Cisco ACLs within a fully segmented Packet Tracer topology. While not a full ZTNA stack (no identity provider, posture check, or dynamic access), it successfully simulates a ZTNA-inspired environment based on static access control.
@@ -16,9 +17,7 @@ Key Zero Trust features implemented:
 
 🚫 Default Deny: All ACLs end with a deny ip any any, enforcing a strict allowlist policy.
 
-📡 Granular Protocol Control: Only required ports and protocols are allowed per service, including DHCP, SSH, HSRP, and ICMP.
-
-🪤 Honeypot Isolation: A decoy system is included and explicitly protected to detect unauthorized access.
+📡 Granular Protocol Control: Only required ports and protocols are allowed per service, including DHCP, SSH and HSRP.
 
 > Ideal for students, engineers, and security professionals preparing for real-world deployment or certifications such as CCNA and Security+.
 
@@ -28,7 +27,7 @@ Key Zero Trust features implemented:
 - Role-based ZTNA-style extended ACLs (deny-by-default)
 - AAA with RADIUS authentication
 - SSH access from IT to network devices (MGMT VLAN)
-- Syslog centralized logging
+- Syslog centralized logging (dummy but make sure you know the purpose)
 - EtherChannel for bandwidth and resilience
 - HSRP for high-availability gateway
 - DHCP Snooping & Dynamic ARP Inspection (DHCP Rougue, VLAN Hopping and ARP Spoofing prevention)
@@ -53,20 +52,25 @@ Key Zero Trust features implemented:
 
 ```
 .
-├── network.pkt                 # Cisco Packet Tracer project file
+├── network.pkt                # Cisco Packet Tracer project file
 ├── acls/                      # All extended ACL definitions
-│   ├── IT-ACL.txt
-│   ├── HR-ACL.txt
-│   ├── SALES-ACL.txt
-│   ├── MGMT-ACL.txt
-│   ├── SERVER-ACL.txt
-│   └── RADIUS-ACL.txt
+│   ├── ASA Firewall ACLs.txt
+│   └── Routers ACLs.txt
 ├── docs/
-│   ├── topology.png           # Network diagram
-│   └── implementation.md      # Notes on features and configs
+│   ├── configurations.md         # In-depth documentation
+│   ├── implementation.md      # Notes on features and configs
+│   └── topology.png           # Network diagram
+├── running-config/
+│   ├── R-HQ-1.txt
+│   ├── R-HQ-2.txt
+│   ├── SW-Core.txt
+│   ├── SW-IT.txt
+│   ├── SW-HR.txt
+│   ├── SW-Sales.txt
+│   └── FW-HQ.txt
 ├── README.md                  # This documentation
 ├── LICENSE                    # License file
-└── CHANGELOG.md               # Change history (optional)
+└── CHANGELOG.md               # Change history
 ```
 
 ## 🔐 ZTNA Rules Applied
@@ -112,22 +116,22 @@ ip access-list extended IT-ACL-IN
 
 1. Open `network.pkt` in Cisco Packet Tracer
 2. Ensure that interfaces are enabled and switches are configured with VLANs
-3. Apply ACLs to correct routed subinterfaces (e.g., `int g0/0.10`)
+3. Check ACLs on routed subinterfaces (e.g., `int g0/0.10`), try to write new ones on your own and test
 4. Use PC in VLAN 10 (IT) to:
+    - SSH into switches (only SW-IT and SW-HR at the moment)
+5. Use PC in VLAN 20 or 30 to:
     - Obtain IP via DHCP
     - Resolve DNS
     - Access HTTP, FTP, HTTPS
-    - SSH into switches
-5. Test lateral movement blocks from SALES/HR to IT
-6. Use Syslog server to verify logging (where supported)
+6. Test lateral movement blocks from SALES/HR to IT
 
 ## 🧪 Testing Scenarios
 
-- ✅ DHCP from each VLAN
+- ✅ DHCP from VLAN 20 and 30
 - ✅ ACL restrictions between departments
 - ✅ RADIUS login authentication (local server)
 - ✅ SSH from IT → MGMT
-- ✅ Ping to honeypot (simulate detection)
+- ✅ HSRP failover
 - ❌ SNMP and Meraki are simulated only
 
 ## 🧱 Future Plans
@@ -139,6 +143,8 @@ ip access-list extended IT-ACL-IN
 - Simulation of alerts from honeypot
 - ZTNA rules export to firewall formats
 - Extended SNMP traps and visual dashboards
+- VMs and Containers for improving the quality and complexity of the simulation
+- New branch site, with a full Layer 3 network
 
 ## Security Plans
 
