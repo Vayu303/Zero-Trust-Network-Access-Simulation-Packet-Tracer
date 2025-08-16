@@ -27,7 +27,7 @@ Key Zero Trust features implemented:
 - Role-based ZTNA-style extended ACLs (deny-by-default)
 - AAA with RADIUS authentication
 - SSH access from IT to network devices (MGMT VLAN)
-- Syslog centralized logging (dummy but make sure you know the purpose)
+- Syslog centralized logging
 - EtherChannel for bandwidth and resilience
 - HSRP for high-availability gateway
 - DHCP Snooping & Dynamic ARP Inspection (DHCP Rougue, VLAN Hopping and ARP Spoofing prevention)
